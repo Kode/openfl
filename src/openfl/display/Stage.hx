@@ -34,6 +34,7 @@ import openfl._internal.renderer.cairo.CairoRenderer;
 import openfl._internal.renderer.canvas.CanvasRenderer;
 import openfl._internal.renderer.console.ConsoleRenderer;
 import openfl._internal.renderer.dom.DOMRenderer;
+import openfl._internal.renderer.kha.KhaRenderer;
 import openfl._internal.renderer.opengl.GLRenderer;
 import openfl._internal.renderer.RenderSession;
 import openfl._internal.TouchData;
@@ -1035,7 +1036,12 @@ class Stage extends DisplayObjectContainer implements IModule {
 	private function __createRenderer ():Void {
 		
 		switch (window.renderer.context) {
-			
+			case KHA:
+
+				#if kha
+				__renderer = new KhaRenderer (this);
+				#end
+
 			case OPENGL (gl):
 				
 				#if (!disable_cffi && (!html5 || !canvas))

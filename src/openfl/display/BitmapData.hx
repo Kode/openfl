@@ -106,6 +106,9 @@ class BitmapData implements IBitmapDrawable {
 	
 	private var __blendMode:BlendMode;
 	private var __buffer:GLBuffer;
+	#if (kha && !macro)
+	private var __khaImage:kha.Image;
+	#end
 	private var __bufferColorTransform:ColorTransform;
 	private var __bufferContext:GLRenderContext;
 	private var __bufferAlpha:Float;
@@ -1904,7 +1907,21 @@ class BitmapData implements IBitmapDrawable {
 			height = image.height;
 			rect = new Rectangle (0, 0, image.width, image.height);
 			
-			#if sys
+			#if (kha && !macro)
+			image.format = BGRA32;
+			image.premultiplied = true;
+			__khaImage = kha.Image.create(image.width, image.height);
+			var pixels = __khaImage.lock();
+			for (y in 0...image.height) {
+				for (x in 0...image.width) {
+					pixels.set(y * __khaImage.realWidth * 4 + x * 4 + 0, image.data[y * image.width * 4 + x * 4 + 2]);
+					pixels.set(y * __khaImage.realWidth * 4 + x * 4 + 1, image.data[y * image.width * 4 + x * 4 + 1]);
+					pixels.set(y * __khaImage.realWidth * 4 + x * 4 + 2, image.data[y * image.width * 4 + x * 4 + 0]);
+					pixels.set(y * __khaImage.realWidth * 4 + x * 4 + 3, image.data[y * image.width * 4 + x * 4 + 3]);
+				}
+			}
+			__khaImage.unlock();
+			#elseif sys
 			image.format = BGRA32;
 			image.premultiplied = true;
 			#end

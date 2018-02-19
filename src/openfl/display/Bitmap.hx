@@ -10,6 +10,8 @@ import openfl.geom.Matrix;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 
+import openfl._internal.renderer.kha.KhaBitmap;
+
 #if (js && html5)
 import js.html.ImageElement;
 #end
@@ -239,11 +241,19 @@ class Bitmap extends DisplayObject implements IShaderDrawable {
 		
 		if (__cacheBitmap != null && !__cacheBitmapRender) {
 			
+			#if kha
+			KhaBitmap.render (__cacheBitmap, renderSession);
+			#else
 			GLBitmap.render (__cacheBitmap, renderSession);
+			#end
 			
 		} else {
 			
+			#if kha
+			KhaBitmap.render (this, renderSession);
+			#else
 			GLBitmap.render (this, renderSession);
+			#end
 			
 		}
 		
