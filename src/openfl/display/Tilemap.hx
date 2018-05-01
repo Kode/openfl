@@ -21,6 +21,9 @@ import openfl._internal.renderer.dom.DOMTilemap;
 import openfl._internal.renderer.opengl.GLBitmap;
 import openfl._internal.renderer.opengl.GLDisplayObject;
 import openfl._internal.renderer.opengl.GLTilemap;
+import openfl._internal.renderer.kha.KhaBitmap;
+import openfl._internal.renderer.kha.KhaDisplayObject;
+import openfl._internal.renderer.kha.KhaTilemap;
 #end
 
 #if !openfl_debug
@@ -402,6 +405,23 @@ class Tilemap extends #if !flash DisplayObject #else Bitmap implements IDisplayO
 		
 	}
 	
+
+	private override function __renderKha (renderSession:RenderSession):Void {
+
+		__updateCacheBitmap (renderSession, false);
+		
+		if (__cacheBitmap != null && !__cacheBitmapRender) {
+			
+			KhaBitmap.render (__cacheBitmap, renderSession);
+			
+		} else {
+			
+			KhaDisplayObject.render (this, renderSession);
+			KhaTilemap.render (this, renderSession);
+			
+		}
+
+	}
 	
 	#if !flash
 	private override function __renderGL (renderSession:RenderSession):Void {
