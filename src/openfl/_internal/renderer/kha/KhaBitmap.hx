@@ -21,6 +21,19 @@ import openfl._internal.renderer.kha.KhaRenderer;
 
 class KhaBitmap {
 	
+
+	private static inline function convertMatrix (matrix:openfl.geom.Matrix):kha.math.FastMatrix4 {
+		
+		var m = kha.math.FastMatrix4.identity();
+		m._00 = matrix.a;
+		m._10 = matrix.b;
+		m._01 = matrix.c;
+		m._11 = matrix.d;
+		m._20 = matrix.tx;
+		m._21 = matrix.ty;
+		return m;
+
+	}
 	
 	public static function render (bitmap:Bitmap, renderSession:RenderSession):Void {
 		
@@ -29,56 +42,48 @@ class KhaBitmap {
 		if (bitmap.__bitmapData != null && bitmap.__bitmapData.__isValid) {
 			#if (kha && !macro)
 			var image = @:privateAccess bitmap.__bitmapData.__khaImage;
-			var g = KhaRenderer.framebuffer.g2;
+			/*var g2 = KhaRenderer.framebuffer.g2;
 			var trans = bitmap.__renderTransform;
-			g.drawImage(image, trans.tx, trans.ty);
-			#end
-			/*var renderer:GLRenderer = cast renderSession.renderer;
-			var gl = renderSession.gl;
-			
+			g2.drawImage(image, trans.tx, trans.ty);*/
+
+			var renderer: KhaRenderer = cast renderSession.renderer;
+
 			renderSession.blendModeManager.setBlendMode (bitmap.__worldBlendMode);
 			renderSession.maskManager.pushObject (bitmap);
 			
 			renderSession.filterManager.pushObject (bitmap);
 			
+			var g = KhaRenderer.framebuffer.g4;
+
 			var shader = renderSession.shaderManager.initShader (bitmap.shader);
 			renderSession.shaderManager.setShader (shader);
-			
-			shader.data.uImage0.input = bitmap.__bitmapData;
-			shader.data.uImage0.smoothing = renderSession.allowSmoothing && (bitmap.smoothing || renderSession.upscaled);
-			shader.data.uMatrix.value = renderer.getMatrix (bitmap.__renderTransform);
-			
+
+			var pipeline = @:privateAccess shader.__pipeline;
+
+			var uImage0 = pipeline.getTextureUnit ("uImage0");
+			g.setTexture (uImage0, image);
+			// shader.data.uImage0.smoothing = renderSession.allowSmoothing && (bitmap.smoothing || renderSession.upscaled);
+			var uMatrix = pipeline.getConstantLocation ("uMatrix");
+			g.setMatrix (uMatrix, convertMatrix(bitmap.__renderTransform));
+
 			var useColorTransform = !bitmap.__worldColorTransform.__isDefault ();
-			if (shader.data.uColorTransform.value == null) shader.data.uColorTransform.value = [];
-			shader.data.uColorTransform.value[0] = useColorTransform;
-			
+			var uColorTransform = pipeline.getConstantLocation ("uColorTransform");
+			g.setBool (uColorTransform, useColorTransform);
+
 			renderSession.shaderManager.updateShader (shader);
+
+			g.setIndexBuffer (bitmap.__bitmapData.getIndexBufferKha ());
+			g.setVertexBuffer (bitmap.__bitmapData.getVertexBufferKha (bitmap.__worldAlpha, bitmap.__worldColorTransform));
 			
-			gl.bindBuffer (gl.ARRAY_BUFFER, bitmap.__bitmapData.getBuffer (gl, bitmap.__worldAlpha, bitmap.__worldColorTransform));
-			
-			gl.vertexAttribPointer (shader.data.aPosition.index, 3, gl.FLOAT, false, 26 * Float32Array.BYTES_PER_ELEMENT, 0);
-			gl.vertexAttribPointer (shader.data.aTexCoord.index, 2, gl.FLOAT, false, 26 * Float32Array.BYTES_PER_ELEMENT, 3 * Float32Array.BYTES_PER_ELEMENT);
-			gl.vertexAttribPointer (shader.data.aAlpha.index, 1, gl.FLOAT, false, 26 * Float32Array.BYTES_PER_ELEMENT, 5 * Float32Array.BYTES_PER_ELEMENT);
-			
-			if (true || useColorTransform) {
-				
-				gl.vertexAttribPointer (shader.data.aColorMultipliers0.index, 4, gl.FLOAT, false, 26 * Float32Array.BYTES_PER_ELEMENT, 6 * Float32Array.BYTES_PER_ELEMENT);
-				gl.vertexAttribPointer (shader.data.aColorMultipliers1.index, 4, gl.FLOAT, false, 26 * Float32Array.BYTES_PER_ELEMENT, 10 * Float32Array.BYTES_PER_ELEMENT);
-				gl.vertexAttribPointer (shader.data.aColorMultipliers2.index, 4, gl.FLOAT, false, 26 * Float32Array.BYTES_PER_ELEMENT, 14 * Float32Array.BYTES_PER_ELEMENT);
-				gl.vertexAttribPointer (shader.data.aColorMultipliers3.index, 4, gl.FLOAT, false, 26 * Float32Array.BYTES_PER_ELEMENT, 18 * Float32Array.BYTES_PER_ELEMENT);
-				gl.vertexAttribPointer (shader.data.aColorOffsets.index, 4, gl.FLOAT, false, 26 * Float32Array.BYTES_PER_ELEMENT, 22 * Float32Array.BYTES_PER_ELEMENT);
-				
-			}
-			
-			gl.drawArrays (gl.TRIANGLE_STRIP, 0, 4);
+			g.drawIndexedVertices(0, 4);
 			
 			#if gl_stats
 				GLStats.incrementDrawCall (DrawCallContext.STAGE);
 			#end
 			
 			renderSession.filterManager.popObject (bitmap);
-			renderSession.maskManager.popObject (bitmap);*/
-			
+			renderSession.maskManager.popObject (bitmap);
+			#end
 		}
 		
 	}

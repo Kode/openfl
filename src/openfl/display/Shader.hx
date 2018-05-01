@@ -6,6 +6,9 @@ import lime.graphics.opengl.GLProgram;
 import lime.utils.Float32Array;
 import lime.utils.GLUtils;
 import openfl.utils.ByteArray;
+#if (kha && !macro)
+import kha.graphics4.PipelineState;
+#end
 
 #if !openfl_debug
 @:fileXml('tags="haxe,release"')
@@ -47,6 +50,9 @@ class Shader {
 	private var __uniformMatrix3:Float32Array;
 	private var __uniformMatrix4:Float32Array;
 	
+	#if (kha && !macro)
+	private var __pipeline:PipelineState;
+	#end
 	
 	#if openfljs
 	private static function __init__ () {
@@ -285,6 +291,31 @@ class Shader {
 	
 	
 	private function __init ():Void {
+
+		#if (kha && !macro)
+
+		if (__pipeline == null) {
+
+			__pipeline = new kha.graphics4.PipelineState();
+			__pipeline.vertexShader = kha.Shaders.standard_vert;
+			__pipeline.fragmentShader = kha.Shaders.standard_frag;
+
+			var structure = new kha.graphics4.VertexStructure();
+			structure.add("aPosition", kha.graphics4.VertexData.Float3);
+			structure.add("aTexCoord", kha.graphics4.VertexData.Float2);
+			structure.add("aAlpha", kha.graphics4.VertexData.Float1);
+			structure.add("aColorMultipliers0", kha.graphics4.VertexData.Float4);
+			structure.add("aColorMultipliers1", kha.graphics4.VertexData.Float4);
+			structure.add("aColorMultipliers2", kha.graphics4.VertexData.Float4);
+			structure.add("aColorMultipliers3", kha.graphics4.VertexData.Float4);
+			structure.add("aColorOffsets", kha.graphics4.VertexData.Float4);
+			__pipeline.inputLayout = [structure];
+
+			__pipeline.compile();
+
+		}
+
+		#else
 		
 		if (__data == null) {
 			
@@ -297,6 +328,8 @@ class Shader {
 			__initGL ();
 			
 		}
+
+		#end
 		
 	}
 	

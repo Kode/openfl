@@ -108,6 +108,8 @@ class BitmapData implements IBitmapDrawable {
 	private var __buffer:GLBuffer;
 	#if (kha && !macro)
 	private var __khaImage:kha.Image;
+	private var __khaIndexBuffer:kha.graphics4.IndexBuffer;
+	private var __khaVertexBuffer:kha.graphics4.VertexBuffer;
 	#end
 	private var __bufferColorTransform:ColorTransform;
 	private var __bufferContext:GLRenderContext;
@@ -1021,6 +1023,196 @@ class BitmapData implements IBitmapDrawable {
 		return __buffer;
 		
 	}
+
+
+	#if (kha && !macro)
+	public function getIndexBufferKha ():kha.graphics4.IndexBuffer {
+
+		if (__khaIndexBuffer == null) {
+			__khaIndexBuffer = new kha.graphics4.IndexBuffer(6, kha.graphics4.Usage.StaticUsage);
+			var indexBuffer = __khaIndexBuffer.lock();
+			indexBuffer[0] = 0;
+			indexBuffer[1] = 1;
+			indexBuffer[2] = 2;
+			indexBuffer[3] = 1;
+			indexBuffer[4] = 3;
+			indexBuffer[5] = 2;
+			__khaIndexBuffer.unlock();
+		}
+		return __khaIndexBuffer;
+
+	}
+	#end
+
+	#if (kha && !macro)
+	public function getVertexBufferKha (alpha:Float, colorTransform:ColorTransform):kha.graphics4.VertexBuffer {
+		
+		if (__khaVertexBuffer == null) {
+			
+			#if openfl_power_of_two
+			
+			var newWidth = 1;
+			var newHeight = 1;
+			
+			while (newWidth < width) {
+				
+				newWidth <<= 1;
+				
+			}
+			
+			while (newHeight < height) {
+				
+				newHeight <<= 1;
+				
+			}
+			
+			var uvWidth = width / newWidth;
+			var uvHeight = height / newHeight;
+			
+			#else
+			
+			var uvWidth = 1;
+			var uvHeight = 1;
+			
+			#end
+			
+			//__bufferData = new Float32Array ([
+				//
+				//width, height, 0, uvWidth, uvHeight, alpha, (color transform, color offset...)
+				//0, height, 0, 0, uvHeight, alpha, (color transform, color offset...)
+				//width, 0, 0, uvWidth, 0, alpha, (color transform, color offset...)
+				//0, 0, 0, 0, 0, alpha, (color transform, color offset...)
+				//
+				//
+			//]);
+			
+			//[ colorTransform.redMultiplier, 0, 0, 0, 0, colorTransform.greenMultiplier, 0, 0, 0, 0, colorTransform.blueMultiplier, 0, 0, 0, 0, colorTransform.alphaMultiplier ];
+			//[ colorTransform.redOffset / 255, colorTransform.greenOffset / 255, colorTransform.blueOffset / 255, colorTransform.alphaOffset / 255 ]
+			
+			var structure = new kha.graphics4.VertexStructure();
+			structure.add("aPosition", kha.graphics4.VertexData.Float3);
+			structure.add("aTexCoord", kha.graphics4.VertexData.Float2);
+			structure.add("aAlpha", kha.graphics4.VertexData.Float1);
+			structure.add("aColorMultipliers0", kha.graphics4.VertexData.Float4);
+			structure.add("aColorMultipliers1", kha.graphics4.VertexData.Float4);
+			structure.add("aColorMultipliers2", kha.graphics4.VertexData.Float4);
+			structure.add("aColorMultipliers3", kha.graphics4.VertexData.Float4);
+			structure.add("aColorOffsets", kha.graphics4.VertexData.Float4);
+			__khaVertexBuffer = new kha.graphics4.VertexBuffer(4, structure, kha.graphics4.Usage.DynamicUsage);
+			var __bufferData = __khaVertexBuffer.lock();
+			
+			__bufferData[0] = width;
+			__bufferData[1] = height;
+			__bufferData[3] = uvWidth;
+			__bufferData[4] = uvHeight;
+			__bufferData[__bufferStride + 1] = height;
+			__bufferData[__bufferStride + 4] = uvHeight;
+			__bufferData[__bufferStride * 2] = width;
+			__bufferData[__bufferStride * 2 + 3] = uvWidth;
+			
+			for (i in 0...4) {
+				
+				__bufferData[__bufferStride * i + 5] = alpha;
+				
+				if (colorTransform != null) {
+					
+					__bufferData[__bufferStride * i + 6] = colorTransform.redMultiplier;
+					__bufferData[__bufferStride * i + 11] = colorTransform.greenMultiplier;
+					__bufferData[__bufferStride * i + 16] = colorTransform.blueMultiplier;
+					__bufferData[__bufferStride * i + 21] = colorTransform.alphaMultiplier;
+					__bufferData[__bufferStride * i + 22] = colorTransform.redOffset / 255;
+					__bufferData[__bufferStride * i + 23] = colorTransform.greenOffset / 255;
+					__bufferData[__bufferStride * i + 24] = colorTransform.blueOffset / 255;
+					__bufferData[__bufferStride * i + 25] = colorTransform.alphaOffset / 255;
+					
+				} else {
+					
+					__bufferData[__bufferStride * i + 6] = 1;
+					__bufferData[__bufferStride * i + 11] = 1;
+					__bufferData[__bufferStride * i + 16] = 1;
+					__bufferData[__bufferStride * i + 21] = 1;
+					
+				}
+				
+			}
+
+			__khaVertexBuffer.unlock();
+
+			__bufferAlpha = alpha;
+			__bufferColorTransform = colorTransform != null ? colorTransform.__clone () : null;
+			
+		} else {
+			
+			var dirty = false;
+
+			var __bufferData = __khaVertexBuffer.lock();
+			
+			if (__bufferAlpha != alpha) {
+				
+				dirty = true;
+				
+				for (i in 0...4) {
+					
+					__bufferData[__bufferStride * i + 5] = alpha;
+					
+				}
+				
+				__bufferAlpha = alpha;
+				
+			}
+			
+			if ((__bufferColorTransform == null && colorTransform != null) || (__bufferColorTransform != null && !__bufferColorTransform.__equals (colorTransform))) {
+				
+				dirty = true;
+				
+				if (colorTransform != null) {
+					
+					if (__bufferColorTransform == null) {
+						__bufferColorTransform = colorTransform.__clone ();
+					} else {
+						__bufferColorTransform.__copyFrom (colorTransform);
+					}
+					
+					for (i in 0...4) {
+						
+						__bufferData[__bufferStride * i + 6] = colorTransform.redMultiplier;
+						__bufferData[__bufferStride * i + 11] = colorTransform.greenMultiplier;
+						__bufferData[__bufferStride * i + 16] = colorTransform.blueMultiplier;
+						__bufferData[__bufferStride * i + 21] = colorTransform.alphaMultiplier;
+						__bufferData[__bufferStride * i + 22] = colorTransform.redOffset / 255;
+						__bufferData[__bufferStride * i + 23] = colorTransform.greenOffset / 255;
+						__bufferData[__bufferStride * i + 24] = colorTransform.blueOffset / 255;
+						__bufferData[__bufferStride * i + 25] = colorTransform.alphaOffset / 255;
+						
+					}
+					
+				} else {
+					
+					for (i in 0...4) {
+						
+						__bufferData[__bufferStride * i + 6] = 1;
+						__bufferData[__bufferStride * i + 11] = 1;
+						__bufferData[__bufferStride * i + 16] = 1;
+						__bufferData[__bufferStride * i + 21] = 1;
+						__bufferData[__bufferStride * i + 22] = 0;
+						__bufferData[__bufferStride * i + 23] = 0;
+						__bufferData[__bufferStride * i + 24] = 0;
+						__bufferData[__bufferStride * i + 25] = 0;
+						
+					}
+					
+				}
+				
+			}
+			
+			__khaVertexBuffer.unlock();
+			
+		}
+		
+		return __khaVertexBuffer;
+		
+	}
+	#end
 	
 	
 	public function getColorBoundsRect (mask:Int, color:Int, findColor:Bool = true):Rectangle {

@@ -933,7 +933,107 @@ class DisplayObjectContainer extends InteractiveObject {
 		
 	}
 	
+
+	private override function __renderKha (renderSession:RenderSession):Void {
+		
+		if (!__renderable || __worldAlpha <= 0) return;
+		
+		super.__renderKha (renderSession);
+		
+		if (__cacheBitmap != null && !__cacheBitmapRender) return;
+		
+		if (__children.length > 0) {
+			
+			renderSession.maskManager.pushObject (this);
+			renderSession.filterManager.pushObject (this);
+			
+			if (renderSession.clearRenderDirty) {
+				
+				for (child in __children) {
+					
+					child.__renderKha (renderSession);
+					child.__renderDirty = false;
+					
+				}
+				
+				__renderDirty = false;
+				
+			} else {
+				
+				for (child in __children) {
+					
+					child.__renderKha (renderSession);
+					
+				}
+				
+			}
+			
+		}
+		
+		for (orphan in __removedChildren) {
+			
+			if (orphan.stage == null) {
+				
+				orphan.__cleanup ();
+				
+			}
+			
+		}
+		
+		__removedChildren.length = 0;
+		
+		if (__children.length > 0) {
+			
+			renderSession.filterManager.popObject (this);
+			renderSession.maskManager.popObject (this);
+			
+		}
+		
+	}
 	
+	
+	private override function __renderKhaMask (renderSession:RenderSession):Void {
+		
+		super.__renderKhaMask (renderSession);
+		
+		if (__cacheBitmap != null && !__cacheBitmapRender) return;
+		
+		if (renderSession.clearRenderDirty) {
+			
+			for (child in __children) {
+				
+				child.__renderKhaMask (renderSession);
+				child.__renderDirty = false;
+				
+			}
+			
+			__renderDirty = false;
+			
+		} else {
+			
+			for (child in __children) {
+				
+				child.__renderKhaMask (renderSession);
+				
+			}
+			
+		}
+		
+		for (orphan in __removedChildren) {
+			
+			if (orphan.stage == null) {
+				
+				orphan.__cleanup ();
+				
+			}
+			
+		}
+		
+		__removedChildren.length = 0;
+		
+	}
+	
+
 	private override function __setStageReference (stage:Stage):Void {
 		
 		super.__setStageReference (stage);

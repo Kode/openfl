@@ -234,6 +234,40 @@ class Bitmap extends DisplayObject implements IShaderDrawable {
 		
 	}
 	
+
+	private override function __renderKha (renderSession:RenderSession):Void {
+
+		__updateCacheBitmap (renderSession, false);
+		
+		if (__cacheBitmap != null && !__cacheBitmapRender) {
+			
+			KhaBitmap.render (__cacheBitmap, renderSession);
+			
+		} else {
+			
+			KhaBitmap.render (this, renderSession);
+			
+		}
+
+	}
+
+
+	private override function __renderKhaMask (renderSession:RenderSession):Void {
+
+		__updateCacheBitmap (renderSession, false);
+		
+		if (__cacheBitmap != null && !__cacheBitmapRender) {
+			
+			KhaBitmap.renderMask (__cacheBitmap, renderSession);
+			
+		} else {
+			
+			KhaBitmap.renderMask (this, renderSession);
+			
+		}
+
+	}
+
 	
 	private override function __renderGL (renderSession:RenderSession):Void {
 		
@@ -241,19 +275,11 @@ class Bitmap extends DisplayObject implements IShaderDrawable {
 		
 		if (__cacheBitmap != null && !__cacheBitmapRender) {
 			
-			#if kha
-			KhaBitmap.render (__cacheBitmap, renderSession);
-			#else
 			GLBitmap.render (__cacheBitmap, renderSession);
-			#end
 			
 		} else {
 			
-			#if kha
-			KhaBitmap.render (this, renderSession);
-			#else
 			GLBitmap.render (this, renderSession);
-			#end
 			
 		}
 		

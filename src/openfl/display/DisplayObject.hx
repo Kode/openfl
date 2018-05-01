@@ -12,6 +12,8 @@ import openfl._internal.renderer.canvas.CanvasDisplayObject;
 import openfl._internal.renderer.canvas.CanvasGraphics;
 import openfl._internal.renderer.dom.DOMBitmap;
 import openfl._internal.renderer.dom.DOMDisplayObject;
+import openfl._internal.renderer.kha.KhaBitmap;
+import openfl._internal.renderer.kha.KhaDisplayObject;
 import openfl._internal.renderer.opengl.GLBitmap;
 import openfl._internal.renderer.opengl.GLDisplayObject;
 import openfl._internal.renderer.opengl.GLRenderer;
@@ -799,6 +801,40 @@ class DisplayObject extends EventDispatcher implements IBitmapDrawable #if openf
 	private function __renderDOMClear (renderSession:RenderSession):Void {
 		
 		DOMDisplayObject.clear (this, renderSession);
+		
+	}
+
+
+	private function __renderKha (renderSession:RenderSession):Void {
+		
+		__updateCacheBitmap (renderSession, false);
+		
+		if (__cacheBitmap != null && !__cacheBitmapRender) {
+			
+			KhaBitmap.render (__cacheBitmap, renderSession);
+			
+		} else {
+			
+			KhaDisplayObject.render (this, renderSession);
+			
+		}
+		
+	}
+	
+	
+	private function __renderKhaMask (renderSession:RenderSession):Void {
+		
+		__updateCacheBitmap (renderSession, false);
+		
+		if (__cacheBitmap != null && !__cacheBitmapRender) {
+			
+			KhaBitmap.renderMask (__cacheBitmap, renderSession);
+			
+		} else {
+			
+			KhaDisplayObject.renderMask (this, renderSession);
+			
+		}
 		
 	}
 	

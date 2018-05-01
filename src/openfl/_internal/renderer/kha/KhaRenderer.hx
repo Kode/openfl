@@ -64,7 +64,7 @@ class KhaRenderer extends AbstractRenderer {
 		renderSession.clearRenderDirty = true;
 		renderSession.renderer = this;
 		renderSession.renderType = KHA;
-		//renderSession.blendModeManager = new GLBlendModeManager (gl);
+		renderSession.blendModeManager = new KhaBlendModeManager ();
 		renderSession.filterManager = new KhaFilterManager (this, renderSession);
 		renderSession.shaderManager = new KhaShaderManager ();
 		renderSession.maskManager = new KhaMaskManager (renderSession);
@@ -207,9 +207,9 @@ class KhaRenderer extends AbstractRenderer {
 		renderSession.upscaled = (displayMatrix.a != 1 || displayMatrix.d != 1);
 		
 		#if !macro
-		framebuffer.g2.begin();
-		stage.__renderGL (renderSession);
-		framebuffer.g2.end();
+		framebuffer.g4.begin();
+		stage.__renderKha (renderSession);
+		framebuffer.g4.end();
 		#end
 		
 		if (offsetX > 0 || offsetY > 0) {

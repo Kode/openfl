@@ -27,28 +27,27 @@ class KhaShaderManager extends AbstractShaderManager {
 	
 	public override function initShader (shader:Shader):Shader {
 		
-		/*if (shader != null) {
+		if (shader != null) {
 			
-			// TODO: Change of GL context?
-			
-			if (shader.gl == null) {
+			#if (kha && !macro)
+			if ((@:privateAccess shader.__pipeline) == null) {
 				
-				shader.gl = gl;
 				shader.__init ();
 				
 			}
+			#end
 			
 			//currentShader = shader;
 			return shader;
 			
 		}
 		
-		return defaultShader;*/
-		return null;
+		return defaultShader;
 		
 	}
 	
 	
+	#if (kha && !macro)
 	public override function setShader (shader:Shader):Void {
 		
 		/*if (currentShader == shader) return;
@@ -73,8 +72,16 @@ class KhaShaderManager extends AbstractShaderManager {
 			currentShader.__enable ();
 			
 		}*/
+
+		if (shader != null) {
+
+			var g = KhaRenderer.framebuffer.g4;
+			g.setPipeline(@:privateAccess shader.__pipeline);
+
+		}
 		
 	}
+	#end
 	
 	
 	public override function updateShader (shader:Shader):Void {
