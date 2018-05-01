@@ -936,7 +936,7 @@ class DisplayObjectContainer extends InteractiveObject {
 
 	private override function __renderKha (renderSession:RenderSession):Void {
 		
-		if (!__renderable || __worldAlpha <= 0) return;
+		if (/*!__renderable ||*/ __worldAlpha <= 0) return;
 		
 		super.__renderKha (renderSession);
 		

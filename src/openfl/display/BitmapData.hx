@@ -1035,8 +1035,8 @@ class BitmapData implements IBitmapDrawable {
 			indexBuffer[1] = 1;
 			indexBuffer[2] = 2;
 			indexBuffer[3] = 1;
-			indexBuffer[4] = 3;
-			indexBuffer[5] = 2;
+			indexBuffer[4] = 2;
+			indexBuffer[5] = 3;
 			__khaIndexBuffer.unlock();
 		}
 		return __khaIndexBuffer;
@@ -1100,15 +1100,26 @@ class BitmapData implements IBitmapDrawable {
 			structure.add("aColorOffsets", kha.graphics4.VertexData.Float4);
 			__khaVertexBuffer = new kha.graphics4.VertexBuffer(4, structure, kha.graphics4.Usage.DynamicUsage);
 			var __bufferData = __khaVertexBuffer.lock();
-			
+
+			for (i in 0...4) {
+				for (i2 in 0...__bufferStride)
+				__bufferData[__bufferStride * i + i2] = 0;
+			}
+			//var width = 1.0; var height = 1.0;
 			__bufferData[0] = width;
 			__bufferData[1] = height;
+			__bufferData[2] = 0.5;
 			__bufferData[3] = uvWidth;
-			__bufferData[4] = uvHeight;
+			
 			__bufferData[__bufferStride + 1] = height;
-			__bufferData[__bufferStride + 4] = uvHeight;
+			__bufferData[__bufferStride + 2] = 0.5;
+			
 			__bufferData[__bufferStride * 2] = width;
+			__bufferData[__bufferStride * 2 + 2] = 0.5;
 			__bufferData[__bufferStride * 2 + 3] = uvWidth;
+			__bufferData[__bufferStride * 2 + 4] = uvHeight;
+
+			__bufferData[__bufferStride * 3 + 4] = uvHeight;
 			
 			for (i in 0...4) {
 				
@@ -1143,7 +1154,7 @@ class BitmapData implements IBitmapDrawable {
 			
 		} else {
 			
-			var dirty = false;
+			/*var dirty = false;
 
 			var __bufferData = __khaVertexBuffer.lock();
 			
@@ -1205,7 +1216,7 @@ class BitmapData implements IBitmapDrawable {
 				
 			}
 			
-			__khaVertexBuffer.unlock();
+			__khaVertexBuffer.unlock();*/
 			
 		}
 		

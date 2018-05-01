@@ -22,15 +22,30 @@ import openfl._internal.renderer.kha.KhaRenderer;
 class KhaBitmap {
 	
 
-	private static inline function convertMatrix (matrix:openfl.geom.Matrix):kha.math.FastMatrix4 {
+	private static function convertMatrix (matrix:Array<Float>):kha.math.FastMatrix4 {
 		
 		var m = kha.math.FastMatrix4.identity();
-		m._00 = matrix.a;
-		m._10 = matrix.b;
-		m._01 = matrix.c;
-		m._11 = matrix.d;
-		m._20 = matrix.tx;
-		m._21 = matrix.ty;
+
+		m._00 = matrix[ 0];
+		m._01 = matrix[ 1];
+		m._02 = matrix[ 2];
+		m._03 = matrix[ 3];
+
+		m._10 = matrix[ 4];
+		m._11 = matrix[ 5];
+		m._12 = matrix[ 6];
+		m._13 = matrix[ 7];
+
+		m._20 = matrix[ 8];
+		m._21 = matrix[ 9];
+		m._22 = matrix[10];
+		m._23 = matrix[11];
+
+		m._30 = matrix[12];
+		m._31 = matrix[13];
+		m._32 = matrix[14];
+		m._33 = matrix[15];
+
 		return m;
 
 	}
@@ -42,9 +57,6 @@ class KhaBitmap {
 		if (bitmap.__bitmapData != null && bitmap.__bitmapData.__isValid) {
 			#if (kha && !macro)
 			var image = @:privateAccess bitmap.__bitmapData.__khaImage;
-			/*var g2 = KhaRenderer.framebuffer.g2;
-			var trans = bitmap.__renderTransform;
-			g2.drawImage(image, trans.tx, trans.ty);*/
 
 			var renderer: KhaRenderer = cast renderSession.renderer;
 
@@ -64,7 +76,7 @@ class KhaBitmap {
 			g.setTexture (uImage0, image);
 			// shader.data.uImage0.smoothing = renderSession.allowSmoothing && (bitmap.smoothing || renderSession.upscaled);
 			var uMatrix = pipeline.getConstantLocation ("uMatrix");
-			g.setMatrix (uMatrix, convertMatrix(bitmap.__renderTransform));
+			g.setMatrix (uMatrix, convertMatrix (renderer.getMatrix (bitmap.__renderTransform)));
 
 			var useColorTransform = !bitmap.__worldColorTransform.__isDefault ();
 			var uColorTransform = pipeline.getConstantLocation ("uColorTransform");
@@ -75,7 +87,7 @@ class KhaBitmap {
 			g.setIndexBuffer (bitmap.__bitmapData.getIndexBufferKha ());
 			g.setVertexBuffer (bitmap.__bitmapData.getVertexBufferKha (bitmap.__worldAlpha, bitmap.__worldColorTransform));
 			
-			g.drawIndexedVertices(0, 4);
+			g.drawIndexedVertices(0, 6);
 			
 			#if gl_stats
 				GLStats.incrementDrawCall (DrawCallContext.STAGE);
