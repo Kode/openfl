@@ -390,7 +390,7 @@ import openfl.Vector;
 		if (__khaIndexBuffer == null) {
 			__khaIndexBuffer = new kha.graphics4.IndexBuffer(__length * 6, kha.graphics4.Usage.StaticUsage);
 			var indexBuffer = __khaIndexBuffer.lock();
-			for (i in 0...__length) {
+			for (i in 0...__length * 6) {
 				indexBuffer[i] = i;
 			}
 			__khaIndexBuffer.unlock();
