@@ -413,6 +413,20 @@ import openfl.Vector;
 			__bufferData = new Float32Array (bufferLength);
 			__bufferSkipped = new Vector<Bool> (__length);
 			__bufferDirty = true;
+
+			if (__khaVertexBuffer != null) {
+				__khaVertexBuffer.delete();
+			}
+			var structure = new kha.graphics4.VertexStructure();
+			structure.add("aPosition", kha.graphics4.VertexData.Float2);
+			structure.add("aTexCoord", kha.graphics4.VertexData.Float2);
+			structure.add("aAlpha", kha.graphics4.VertexData.Float1);
+			structure.add("aColorMultipliers0", kha.graphics4.VertexData.Float4);
+			structure.add("aColorMultipliers1", kha.graphics4.VertexData.Float4);
+			structure.add("aColorMultipliers2", kha.graphics4.VertexData.Float4);
+			structure.add("aColorMultipliers3", kha.graphics4.VertexData.Float4);
+			structure.add("aColorOffsets", kha.graphics4.VertexData.Float4);
+			__khaVertexBuffer = new kha.graphics4.VertexBuffer(__length * 6, structure, kha.graphics4.Usage.DynamicUsage);
 			
 		} else if (__bufferData.length != bufferLength) {
 			
@@ -447,10 +461,9 @@ import openfl.Vector;
 			__bufferSkipped.length = __length;
 			__bufferDirty = true;
 			
-		}
-		
-		if (__khaVertexBuffer == null) {
-			
+			if (__khaVertexBuffer != null) {
+				__khaVertexBuffer.delete();
+			}
 			var structure = new kha.graphics4.VertexStructure();
 			structure.add("aPosition", kha.graphics4.VertexData.Float2);
 			structure.add("aTexCoord", kha.graphics4.VertexData.Float2);
@@ -461,8 +474,9 @@ import openfl.Vector;
 			structure.add("aColorMultipliers3", kha.graphics4.VertexData.Float4);
 			structure.add("aColorOffsets", kha.graphics4.VertexData.Float4);
 			__khaVertexBuffer = new kha.graphics4.VertexBuffer(__length * 6, structure, kha.graphics4.Usage.DynamicUsage);
-			
+
 		}
+		
 		
 		// TODO: Handle __dirty flags, copy only changed values
 		
