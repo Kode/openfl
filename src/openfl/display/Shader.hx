@@ -301,7 +301,7 @@ class Shader {
 			__pipeline.fragmentShader = kha.Shaders.standard_frag;
 
 			var structure = new kha.graphics4.VertexStructure();
-			structure.add("aPosition", kha.graphics4.VertexData.Float3);
+			structure.add("aPosition", kha.graphics4.VertexData.Float2);
 			structure.add("aTexCoord", kha.graphics4.VertexData.Float2);
 			structure.add("aAlpha", kha.graphics4.VertexData.Float1);
 			structure.add("aColorMultipliers0", kha.graphics4.VertexData.Float4);

@@ -6,7 +6,7 @@ in vec4 aColorMultipliers1;
 in vec4 aColorMultipliers2;
 in vec4 aColorMultipliers3;
 in vec4 aColorOffsets;
-in vec3 aPosition;
+in vec2 aPosition;
 in vec2 aTexCoord;
 out float vAlpha;
 out vec4 vColorMultipliers0;
@@ -34,6 +34,7 @@ void main(void) {
 		
 	}
 	
-	gl_Position = uMatrix * vec4(aPosition, 1.0);
+	vec4 pos = uMatrix * vec4(aPosition, 0.5, 1.0);
+	gl_Position = vec4(pos.x, pos.y * -1.0, pos.z, pos.w);
 	
 }

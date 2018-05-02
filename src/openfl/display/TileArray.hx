@@ -388,10 +388,10 @@ import openfl.Vector;
 	public function __getIndexBufferKha ():kha.graphics4.IndexBuffer {
 
 		if (__khaIndexBuffer == null) {
-			__khaIndexBuffer = new kha.graphics4.IndexBuffer(__length, kha.graphics4.Usage.StaticUsage);
+			__khaIndexBuffer = new kha.graphics4.IndexBuffer(__length * 6, kha.graphics4.Usage.StaticUsage);
 			var indexBuffer = __khaIndexBuffer.lock();
 			for (i in 0...__length) {
-				indexBuffer[0] = i;
+				indexBuffer[i] = i;
 			}
 			__khaIndexBuffer.unlock();
 		}
@@ -452,7 +452,7 @@ import openfl.Vector;
 		if (__khaVertexBuffer == null) {
 			
 			var structure = new kha.graphics4.VertexStructure();
-			structure.add("aPosition", kha.graphics4.VertexData.Float3);
+			structure.add("aPosition", kha.graphics4.VertexData.Float2);
 			structure.add("aTexCoord", kha.graphics4.VertexData.Float2);
 			structure.add("aAlpha", kha.graphics4.VertexData.Float1);
 			structure.add("aColorMultipliers0", kha.graphics4.VertexData.Float4);
@@ -460,7 +460,7 @@ import openfl.Vector;
 			structure.add("aColorMultipliers2", kha.graphics4.VertexData.Float4);
 			structure.add("aColorMultipliers3", kha.graphics4.VertexData.Float4);
 			structure.add("aColorOffsets", kha.graphics4.VertexData.Float4);
-			__khaVertexBuffer = new kha.graphics4.VertexBuffer(__length, structure, kha.graphics4.Usage.DynamicUsage);
+			__khaVertexBuffer = new kha.graphics4.VertexBuffer(__length * 6, structure, kha.graphics4.Usage.DynamicUsage);
 			
 		}
 		
@@ -602,32 +602,32 @@ import openfl.Vector;
 				__bufferData[offset + 0] = x;
 				__bufferData[offset + 1] = y;
 				__bufferData[offset + 2] = uvX;
-				__bufferData[offset + 3] = uvY;
+				__bufferData[offset + 3] = uvHeight;
 				
 				__bufferData[offset + attributeLength + 0] = x2;
 				__bufferData[offset + attributeLength + 1] = y2;
 				__bufferData[offset + attributeLength + 2] = uvWidth;
-				__bufferData[offset + attributeLength + 3] = uvY;
+				__bufferData[offset + attributeLength + 3] = uvHeight;
 				
 				__bufferData[offset + (attributeLength * 2) + 0] = x3;
 				__bufferData[offset + (attributeLength * 2) + 1] = y3;
 				__bufferData[offset + (attributeLength * 2) + 2] = uvX;
-				__bufferData[offset + (attributeLength * 2) + 3] = uvHeight;
+				__bufferData[offset + (attributeLength * 2) + 3] = uvY;
 				
 				__bufferData[offset + (attributeLength * 3) + 0] = x3;
 				__bufferData[offset + (attributeLength * 3) + 1] = y3;
 				__bufferData[offset + (attributeLength * 3) + 2] = uvX;
-				__bufferData[offset + (attributeLength * 3) + 3] = uvHeight;
+				__bufferData[offset + (attributeLength * 3) + 3] = uvY;
 				
 				__bufferData[offset + (attributeLength * 4) + 0] = x2;
 				__bufferData[offset + (attributeLength * 4) + 1] = y2;
 				__bufferData[offset + (attributeLength * 4) + 2] = uvWidth;
-				__bufferData[offset + (attributeLength * 4) + 3] = uvY;
+				__bufferData[offset + (attributeLength * 4) + 3] = uvHeight;
 				
 				__bufferData[offset + (attributeLength * 5) + 0] = x4;
 				__bufferData[offset + (attributeLength * 5) + 1] = y4;
 				__bufferData[offset + (attributeLength * 5) + 2] = uvWidth;
-				__bufferData[offset + (attributeLength * 5) + 3] = uvHeight;
+				__bufferData[offset + (attributeLength * 5) + 3] = uvY;
 				
 				for (i in 0...6) {
 					
