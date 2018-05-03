@@ -427,6 +427,14 @@ import openfl.Vector;
 			structure.add("aColorMultipliers3", kha.graphics4.VertexData.Float4);
 			structure.add("aColorOffsets", kha.graphics4.VertexData.Float4);
 			__khaVertexBuffer = new kha.graphics4.VertexBuffer(__length * 6, structure, kha.graphics4.Usage.DynamicUsage);
+
+			if (__khaIndexBuffer != null) __khaIndexBuffer.delete();
+			__khaIndexBuffer = new kha.graphics4.IndexBuffer(__length * 6, kha.graphics4.Usage.StaticUsage);
+			var indexBuffer = __khaIndexBuffer.lock();
+			for (i in 0...__length * 6) {
+				indexBuffer[i] = i;
+			}
+			__khaIndexBuffer.unlock();
 			
 		} else if (__bufferData.length != bufferLength) {
 			
@@ -474,6 +482,14 @@ import openfl.Vector;
 			structure.add("aColorMultipliers3", kha.graphics4.VertexData.Float4);
 			structure.add("aColorOffsets", kha.graphics4.VertexData.Float4);
 			__khaVertexBuffer = new kha.graphics4.VertexBuffer(__length * 6, structure, kha.graphics4.Usage.DynamicUsage);
+
+			if (__khaIndexBuffer != null) __khaIndexBuffer.delete();
+			__khaIndexBuffer = new kha.graphics4.IndexBuffer(__length * 6, kha.graphics4.Usage.StaticUsage);
+			var indexBuffer = __khaIndexBuffer.lock();
+			for (i in 0...__length * 6) {
+				indexBuffer[i] = i;
+			}
+			__khaIndexBuffer.unlock();
 
 		}
 		
@@ -665,7 +681,7 @@ import openfl.Vector;
 			}
 			
 			var data = __khaVertexBuffer.lock();
-			for (i in 0...bufferLength) {
+			for (i in 0...__bufferData.length) {
 				data[i] = __bufferData[i];
 			}
 			__khaVertexBuffer.unlock();

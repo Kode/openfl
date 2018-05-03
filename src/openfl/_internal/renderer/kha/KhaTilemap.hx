@@ -67,8 +67,8 @@ class KhaTilemap {
 		var defaultShader = shader;
 		var defaultTileset = tilemap.__tileset;
 		
-		g.setIndexBuffer (tileArray.__getIndexBufferKha ());
 		g.setVertexBuffer(tileArray.__updateVertexBufferKha (defaultTileset, tilemap.__worldAlpha, tilemap.__worldColorTransform));
+		g.setIndexBuffer (tileArray.__getIndexBufferKha ());
 		
 		var cacheShader = null;
 		var cacheBitmapData = null;

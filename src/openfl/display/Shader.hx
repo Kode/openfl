@@ -299,6 +299,10 @@ class Shader {
 			__pipeline = new kha.graphics4.PipelineState();
 			__pipeline.vertexShader = kha.Shaders.standard_vert;
 			__pipeline.fragmentShader = kha.Shaders.standard_frag;
+			__pipeline.blendSource = kha.graphics4.BlendingFactor.BlendOne;
+			__pipeline.blendDestination = kha.graphics4.BlendingFactor.InverseSourceAlpha;
+			__pipeline.alphaBlendSource = kha.graphics4.BlendingFactor.SourceAlpha;
+			__pipeline.alphaBlendDestination = kha.graphics4.BlendingFactor.InverseSourceAlpha;
 
 			var structure = new kha.graphics4.VertexStructure();
 			structure.add("aPosition", kha.graphics4.VertexData.Float2);
