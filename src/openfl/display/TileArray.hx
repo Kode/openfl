@@ -632,32 +632,32 @@ import openfl.Vector;
 				__bufferData[offset + 0] = x;
 				__bufferData[offset + 1] = y;
 				__bufferData[offset + 2] = uvX;
-				__bufferData[offset + 3] = uvHeight;
+				__bufferData[offset + 3] = uvY;
 				
 				__bufferData[offset + attributeLength + 0] = x2;
 				__bufferData[offset + attributeLength + 1] = y2;
 				__bufferData[offset + attributeLength + 2] = uvWidth;
-				__bufferData[offset + attributeLength + 3] = uvHeight;
+				__bufferData[offset + attributeLength + 3] = uvY;
 				
 				__bufferData[offset + (attributeLength * 2) + 0] = x3;
 				__bufferData[offset + (attributeLength * 2) + 1] = y3;
 				__bufferData[offset + (attributeLength * 2) + 2] = uvX;
-				__bufferData[offset + (attributeLength * 2) + 3] = uvY;
+				__bufferData[offset + (attributeLength * 2) + 3] = uvHeight;
 				
 				__bufferData[offset + (attributeLength * 3) + 0] = x3;
 				__bufferData[offset + (attributeLength * 3) + 1] = y3;
 				__bufferData[offset + (attributeLength * 3) + 2] = uvX;
-				__bufferData[offset + (attributeLength * 3) + 3] = uvY;
+				__bufferData[offset + (attributeLength * 3) + 3] = uvHeight;
 				
 				__bufferData[offset + (attributeLength * 4) + 0] = x2;
 				__bufferData[offset + (attributeLength * 4) + 1] = y2;
 				__bufferData[offset + (attributeLength * 4) + 2] = uvWidth;
-				__bufferData[offset + (attributeLength * 4) + 3] = uvHeight;
+				__bufferData[offset + (attributeLength * 4) + 3] = uvY;
 				
 				__bufferData[offset + (attributeLength * 5) + 0] = x4;
 				__bufferData[offset + (attributeLength * 5) + 1] = y4;
 				__bufferData[offset + (attributeLength * 5) + 2] = uvWidth;
-				__bufferData[offset + (attributeLength * 5) + 3] = uvY;
+				__bufferData[offset + (attributeLength * 5) + 3] = uvHeight;
 				
 				for (i in 0...6) {
 					
