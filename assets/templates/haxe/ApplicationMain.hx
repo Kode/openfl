@@ -16,9 +16,14 @@ import haxe.macro.Expr;
 	
 	
 	#if !macro
-	
-	
+
 	public static function main () {
+		kha.System.init({title: "OpenFL Test", width: ::width::, height: ::height::}, function () {
+			kha.Assets.loadEverything(main2);
+		});
+	}	
+	
+	public static function main2 () {
 		
 		var projectName = "::APP_FILE::";
 		
