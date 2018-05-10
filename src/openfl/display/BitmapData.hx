@@ -91,7 +91,7 @@ import openfl._internal.renderer.opengl.stats.DrawCallContext;
 class BitmapData implements IBitmapDrawable {
 	
 	
-	private static inline var __bufferStride = 26;
+	private static inline var __bufferStride = 25;
 	private static var __supportsBGRA:Null<Bool> = null;
 	private static var __tempVector:Vector2 = new Vector2 ();
 	private static var __textureFormat:Int;
@@ -1090,7 +1090,7 @@ class BitmapData implements IBitmapDrawable {
 			//[ colorTransform.redOffset / 255, colorTransform.greenOffset / 255, colorTransform.blueOffset / 255, colorTransform.alphaOffset / 255 ]
 			
 			var structure = new kha.graphics4.VertexStructure();
-			structure.add("aPosition", kha.graphics4.VertexData.Float3);
+			structure.add("aPosition", kha.graphics4.VertexData.Float2);
 			structure.add("aTexCoord", kha.graphics4.VertexData.Float2);
 			structure.add("aAlpha", kha.graphics4.VertexData.Float1);
 			structure.add("aColorMultipliers0", kha.graphics4.VertexData.Float4);
@@ -1108,40 +1108,36 @@ class BitmapData implements IBitmapDrawable {
 			//var width = 1.0; var height = 1.0;
 			__bufferData[0] = width;
 			__bufferData[1] = height;
-			__bufferData[2] = 0.5;
-			__bufferData[3] = uvWidth;
+			__bufferData[2] = uvWidth;
+			__bufferData[3] = uvHeight;
 			
 			__bufferData[__bufferStride + 1] = height;
-			__bufferData[__bufferStride + 2] = 0.5;
+			__bufferData[__bufferStride + 3] = uvHeight;
 			
 			__bufferData[__bufferStride * 2] = width;
-			__bufferData[__bufferStride * 2 + 2] = 0.5;
-			__bufferData[__bufferStride * 2 + 3] = uvWidth;
-			__bufferData[__bufferStride * 2 + 4] = uvHeight;
+			__bufferData[__bufferStride * 2 + 2] = uvWidth;
 
-			__bufferData[__bufferStride * 3 + 4] = uvHeight;
-			
 			for (i in 0...4) {
 				
-				__bufferData[__bufferStride * i + 5] = alpha;
+				__bufferData[__bufferStride * i + 4] = alpha;
 				
 				if (colorTransform != null) {
 					
-					__bufferData[__bufferStride * i + 6] = colorTransform.redMultiplier;
-					__bufferData[__bufferStride * i + 11] = colorTransform.greenMultiplier;
-					__bufferData[__bufferStride * i + 16] = colorTransform.blueMultiplier;
-					__bufferData[__bufferStride * i + 21] = colorTransform.alphaMultiplier;
-					__bufferData[__bufferStride * i + 22] = colorTransform.redOffset / 255;
-					__bufferData[__bufferStride * i + 23] = colorTransform.greenOffset / 255;
-					__bufferData[__bufferStride * i + 24] = colorTransform.blueOffset / 255;
-					__bufferData[__bufferStride * i + 25] = colorTransform.alphaOffset / 255;
+					__bufferData[__bufferStride * i + 5] = colorTransform.redMultiplier;
+					__bufferData[__bufferStride * i + 10] = colorTransform.greenMultiplier;
+					__bufferData[__bufferStride * i + 15] = colorTransform.blueMultiplier;
+					__bufferData[__bufferStride * i + 20] = colorTransform.alphaMultiplier;
+					__bufferData[__bufferStride * i + 21] = colorTransform.redOffset / 255;
+					__bufferData[__bufferStride * i + 22] = colorTransform.greenOffset / 255;
+					__bufferData[__bufferStride * i + 23] = colorTransform.blueOffset / 255;
+					__bufferData[__bufferStride * i + 24] = colorTransform.alphaOffset / 255;
 					
 				} else {
 					
-					__bufferData[__bufferStride * i + 6] = 1;
-					__bufferData[__bufferStride * i + 11] = 1;
-					__bufferData[__bufferStride * i + 16] = 1;
-					__bufferData[__bufferStride * i + 21] = 1;
+					__bufferData[__bufferStride * i + 5] = 1;
+					__bufferData[__bufferStride * i + 10] = 1;
+					__bufferData[__bufferStride * i + 15] = 1;
+					__bufferData[__bufferStride * i + 20] = 1;
 					
 				}
 				
