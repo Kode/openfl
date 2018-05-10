@@ -27,7 +27,9 @@ class KhaTextField {
 	
 
 	private static inline function convertColor (color: Int): kha.Color {
-		return kha.Color.White;
+		var c:kha.Color = color;
+		c.Ab = 255;
+		return c;
 	}
 
 	
@@ -144,7 +146,7 @@ class KhaTextField {
 						
 						//context.font = TextEngine.getFont (group.format);
 						g.font = kha.Assets.fonts.LiberationSans_Regular;
-						g.fontSize = 20;
+						g.fontSize = group.format.size;
 						g.color = convertColor(group.format.color);
 					
 						if (textField.__filters != null && textField.__filters.length > 0) {

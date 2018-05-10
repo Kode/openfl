@@ -208,7 +208,7 @@ class KhaRenderer extends AbstractRenderer {
 		
 		#if !macro
 		framebuffer.g4.begin();
-		framebuffer.g4.clear(kha.Color.Black);
+		framebuffer.g4.clear(kha.Color.White);
 		stage.__renderKha (renderSession);
 		framebuffer.g4.end();
 		#end
