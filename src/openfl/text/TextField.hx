@@ -12,6 +12,7 @@ import openfl._internal.renderer.cairo.CairoTextField;
 import openfl._internal.renderer.canvas.CanvasTextField;
 import openfl._internal.renderer.dom.DOMBitmap;
 import openfl._internal.renderer.dom.DOMTextField;
+import openfl._internal.renderer.kha.KhaTextField;
 import openfl._internal.renderer.opengl.GLRenderer;
 import openfl._internal.renderer.RenderSession;
 import openfl._internal.swf.SWFLite;
@@ -1497,6 +1498,15 @@ class TextField extends InteractiveObject implements IShaderDrawable {
 		
 		super.__renderGL (renderSession);
 		
+	}
+
+
+	private override function __renderKha (renderSession:RenderSession):Void {
+
+		KhaTextField.render (this, renderSession, __worldTransform);
+
+		super.__renderKha (renderSession);
+
 	}
 	
 	
